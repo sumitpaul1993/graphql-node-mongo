@@ -1,43 +1,22 @@
-// const express = require('express');
-// const app = express();
-const { ApolloServer } = require('@apollo/server')
-const { startStandaloneServer } = require('@apollo/server/standalone')
-const { Schema } = require('./graphql/schema/schema.js');
-const { connectDB } = require('./database/database.js');
-const { getAllUsers, getUsersDetails } = require('./service/userService.js');
-const { getAllProducts, getProductsDetails } = require('./service/productService.js');
-require('dotenv').config()
+import express from 'express';
+const app = express();
+import { connectDB } from './database/database.js';
+import { ConnectGraphQL } from './graphql/graphql.js';
+import * as dotenv from 'dotenv'
+dotenv.config()
+import { expressMiddleware } from '@as-integrations/express5';
 
 
 connectDB(process.env.MONGODB_URI)
 
+const graphQLServer = await ConnectGraphQL()
+await graphQLServer.start()
 
-const server = new ApolloServer({
-    typeDefs: Schema,
-    resolvers: {
-        Query: {
-            users: getAllUsers,
-            products: getAllProducts,
-            product: getProductsDetails
-        },
-        Product: {
-            created_by: async (parent) => {
-                return await getUsersDetails(parent.created_by)
-            }
-        }
-    }
+app.use(express.json())
+app.use('/graphql', expressMiddleware(graphQLServer))
+
+app.get('/', (req, res) => { res.send("Hello") })
+
+app.listen(process.env.PORT, () => {
+    console.log("Listing port ", process.env.PORT)
 })
-
-startStandaloneServer(server, {
-    listen: {
-        port: process.env.PORT
-    }
-}).then(() => {
-    console.log('server listing on port ', process.env.PORT)
-}).catch((err) => {
-    console.log(err)
-})
-
-// app.listen(port, () => {
-//     console.log("Listing port ", port)
-// })
