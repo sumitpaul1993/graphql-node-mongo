@@ -21,4 +21,8 @@ export const Schema = `#graphql
         products: [Product]
         product(id: ID!): Product
     }
+
+    type Mutation {
+        addUser(name: String!, email: String!) : String
+    }
 `

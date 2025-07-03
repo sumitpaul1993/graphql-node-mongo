@@ -11,3 +11,8 @@ export const getUsersDetails = async (id) => {
     const users = await UsersModel.findById(id);
     return users;
 }
+
+export const addUser = async (parent, args) => {
+    console.log(args)
+    return "add this use to db"
+}

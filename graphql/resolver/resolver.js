@@ -1,7 +1,10 @@
-import { getAllUsers, getUsersDetails } from '../../service/userService.js';
+import { getAllUsers, getUsersDetails, addUser } from '../../service/userService.js';
 import { getAllProducts, getProductsDetails } from '../../service/productService.js';
 
 export const GraphQLResolver = {
+    Mutation: {
+        addUser: addUser
+    },
     Query: {
         users: getAllUsers,
         products: getAllProducts,
