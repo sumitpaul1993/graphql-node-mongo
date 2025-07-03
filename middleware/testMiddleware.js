@@ -1,10 +1,12 @@
-export const graphqlMiddleware = async (req) => {
+export const graphqlMiddleware = async (req, res, next) => {
     let token = req.headers.authorization
     if(!token) {
-        throw new Error('token not found')
+        return res.status(200).json({ "status": true, "result": 'Token Missing!' })
     }
 
     if(token != 12345) {
-        throw new Error('wrong token')
+        return res.status(200).json({ "status": true, "result": 'Wrong Token!' })
     }
+    req.data = "Authenticated"
+    next()
 } 

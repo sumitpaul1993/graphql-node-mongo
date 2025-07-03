@@ -5,6 +5,7 @@ import { ConnectGraphQL } from './graphql/graphql.js';
 import * as dotenv from 'dotenv'
 dotenv.config()
 import { expressMiddleware } from '@as-integrations/express5';
+import { graphqlMiddleware } from './middleware/testMiddleware.js';
 
 
 connectDB(process.env.MONGODB_URI)
@@ -13,7 +14,19 @@ const graphQLServer = await ConnectGraphQL()
 await graphQLServer.start()
 
 app.use(express.json())
-app.use('/graphql', expressMiddleware(graphQLServer))
+app.use(
+    '/graphql',
+    // express.json(),
+    graphqlMiddleware,
+    expressMiddleware(
+        graphQLServer,
+        {
+            context: async ({ req }) => ({
+                user: req.user // Pass user to context
+            })
+        }
+    )
+)
 
 app.get('/', (req, res) => { res.send("Hello") })
 
