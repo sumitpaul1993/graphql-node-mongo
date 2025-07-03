@@ -22,7 +22,7 @@ app.use(
         graphQLServer,
         {
             context: async ({ req }) => ({
-                user: req.user // Pass user to context
+                user: req.data // Pass user to context
             })
         }
     )

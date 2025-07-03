@@ -7,7 +7,8 @@ export default {
         product: getProductsDetails
     },
     Product: {
-        created_by: async (parent) => {
+        created_by: async (parent, args, context) => {
+            // console.log(context)
             return await getUsersDetails(parent.created_by)
         }
     }
