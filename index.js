@@ -1,11 +1,11 @@
-const express = require('express');
-const app = express();
-const port = 3000
+// const express = require('express');
+// const app = express();
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { Schema } = require('./graphql/schema/schema.js');
 const { connectDB } = require('./database/database.js');
-const { Users } = require('./model/user.js');
+const { getAllUsers, getUsersDetails } = require('./service/userService.js');
+const { getAllProducts, getProductsDetails } = require('./service/productService.js');
 require('dotenv').config()
 
 
@@ -16,10 +16,13 @@ const server = new ApolloServer({
     typeDefs: Schema,
     resolvers: {
         Query: {
-            hello: () => 'Hi',
-            users: async () => {
-                const users = await Users.find();
-                return users;
+            users: getAllUsers,
+            products: getAllProducts,
+            product: getProductsDetails
+        },
+        Product: {
+            created_by: async (parent) => {
+                return await getUsersDetails(parent.created_by)
             }
         }
     }

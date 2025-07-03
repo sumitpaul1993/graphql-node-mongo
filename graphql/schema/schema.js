@@ -7,8 +7,18 @@ export const Schema = `#graphql
         updatedAt: String!
     }
 
+    type Product {
+        _id: ID!
+        name: String!
+        description: String!
+        createdAt: String!
+        updatedAt: String!
+        created_by: User
+    }
+
     type Query {
-        hello: String
         users: [User]
+        products: [Product]
+        product(id: ID!): Product
     }
 `

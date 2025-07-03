@@ -6,12 +6,16 @@ const Schema = new mongoose.Schema(
             type: String,
             require: true
         },
-        email: {
+        description: {
             type: String,
             require: true
+        },
+        created_by: {
+            type: mongoose.Types.ObjectId,
+            require: true,
         }
     },
     { timestamps: true }
 )
 
-export const UsersModel = mongoose.model('users', Schema)
+export const ProductsModel = mongoose.model('products', Schema)
